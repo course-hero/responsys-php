@@ -824,8 +824,6 @@ class ResponsysWSService extends \SoapClient
             ), SOAP_ENC_OBJECT);
         $header = new \SoapHeader('ws.rsys.com', 'SessionHeader', $session_header);
         $this->__setSoapHeaders(array($header));
-        $jsessionId = $this->_cookies["JSESSIONID"][0];
-        $this->__setCookie("JSESSIONID", $jsessionId);
         $this->authenticated = true;
     }
 }
