@@ -87,7 +87,7 @@ class AuthenticatedEndpointTest extends \PHPUnit_Framework_TestCase
 class ResponsysWSServiceAuthenticationStub extends ResponsysWSService{
     public $soapCalls = [];
 
-    public function __soapCall ($function_name, array $arguments, array $options = null, $input_headers = null, array &$output_headers = null) {
+    public function __soapCall ($function_name, $arguments, $options = NULL, $input_headers = NULL, &$output_headers = NULL) {
         $this->soapCalls[] = func_get_args();
 
         if ($function_name == 'login'){
