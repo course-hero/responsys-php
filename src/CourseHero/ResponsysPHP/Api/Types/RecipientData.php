@@ -30,5 +30,4 @@ class RecipientData
     $this->recipient = $recipient;
     $this->optionalData = $optionalData;
   }
-
 }

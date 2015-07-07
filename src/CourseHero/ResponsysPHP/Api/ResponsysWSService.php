@@ -15,6 +15,7 @@ class ResponsysWSService extends \SoapClient
     protected $authenticated;
     protected $username;
     protected $password;
+    protected $sessionId;
 
     /**
      *
@@ -262,7 +263,9 @@ class ResponsysWSService extends \SoapClient
      */
     public function login(Calls\Login $parameters)
     {
-        return $this->__soapCall('login', array($parameters));
+        $response = $this->__soapCall('login', array($parameters));
+        $this->setSessionId($response->result->sessionId);
+        return $response;
     }
 
     /**
@@ -274,7 +277,9 @@ class ResponsysWSService extends \SoapClient
      */
     public function authenticateServer(Calls\AuthenticateServer $parameters)
     {
-        return $this->__soapCall('authenticateServer', array($parameters));
+        $response = $this->__soapCall('authenticateServer', array($parameters));
+        $this->setSessionId($response->result->sessionId);
+        return $response;
     }
 
     /**
@@ -286,7 +291,9 @@ class ResponsysWSService extends \SoapClient
      */
     public function loginWithCertificate(Calls\LoginWithCertificate $parameters)
     {
-        return $this->__soapCall('loginWithCertificate', array($parameters));
+        $response = $this->__soapCall('loginWithCertificate', array($parameters));
+        $this->setSessionId($response->result->sessionId);
+        return $response;
     }
 
     /**
@@ -804,26 +811,46 @@ class ResponsysWSService extends \SoapClient
         return $this->__authenticatedSoapCall('createProfileExtensionTable', array($parameters));
     }
 
-    protected function __authenticatedSoapCall ($functionName, array $arguments, array $options = null, $inputHeaders = null, array &$outputHeaders = null){
-        if (!$this->authenticated){
-            //TODO: support methods other than login
-            $response = $this->login(new Calls\Login($this->username, $this->password));
-
-            $this->setSessionInformation($response);
-        }
-
-        return $this->__soapCall($functionName, $arguments, $options, $inputHeaders, $outputHeaders);
+    /**
+     * Returns true if this client is currently authenticated
+     *
+     * @return bool
+     */
+    public function isAuthenticated(){
+        return $this->authenticated;
     }
 
-    protected function setSessionInformation(Types\LoginResponse $response){
-        //do more stuff
-        $sessionId = $response->result->sessionId;
+    /**
+     * Gets the session id currently in use
+     * 
+     * @return string
+     */
+    public function getSessionId(){
+        return $this->sessionId;
+    }
+
+    /**
+     * Set session information
+     * Service will report as authenticated after setting session information
+     *
+     * @param $sessionId
+     */
+    public function setSessionId($sessionId){
+        $this->sessionId = $sessionId;
         $session_header = new \SoapVar(
             array(
-                'sessionId' => new \SoapVar($sessionId, XSD_STRING, NULL, NULL, NULL, 'ws.rsys.com'),
+                'sessionId' => new \SoapVar($this->sessionId, XSD_STRING, NULL, NULL, NULL, 'ws.rsys.com'),
             ), SOAP_ENC_OBJECT);
         $header = new \SoapHeader('ws.rsys.com', 'SessionHeader', $session_header);
         $this->__setSoapHeaders(array($header));
         $this->authenticated = true;
+    }
+
+    protected function __authenticatedSoapCall ($functionName, array $arguments, array $options = null, $inputHeaders = null, array &$outputHeaders = null){
+        if (!$this->authenticated){
+            $this->login(new Calls\Login($this->username, $this->password));
+        }
+
+        return $this->__soapCall($functionName, $arguments, $options, $inputHeaders, $outputHeaders);
     }
 }
