@@ -836,13 +836,17 @@ class ResponsysWSService extends \SoapClient
         return $this->sessionId;
     }
 
+    public function getJSessionId(){
+        return $this->_cookies["JSESSIONID"][0];
+    }
+
     /**
      * Set session information
      * Service will report as authenticated after setting session information
      *
      * @param $sessionId
      */
-    public function setSessionId($sessionId){
+    public function setSessionId($sessionId, $jsessionId = null){
         $this->sessionId = $sessionId;
         $session_header = new \SoapVar(
             array(
@@ -850,6 +854,11 @@ class ResponsysWSService extends \SoapClient
             ), SOAP_ENC_OBJECT);
         $header = new \SoapHeader('ws.rsys.com', 'SessionHeader', $session_header);
         $this->__setSoapHeaders(array($header));
+
+        if ($jsessionId) {
+            $this->__setCookie("JSESSIONID", $jsessionId);
+        }
+
         $this->authenticated = true;
     }
 
