@@ -255,6 +255,13 @@ class ResponsysWSService extends \SoapClient
     }
 
     /**
+     * Authenticate with default parameters
+     */
+    public function authenticate(){
+        $this->login(new Calls\Login($this->username, $this->password));
+    }
+
+    /**
      * Login to the Responsys Web Services API.
      *
      * @param Calls\Login $parameters
@@ -822,7 +829,7 @@ class ResponsysWSService extends \SoapClient
 
     /**
      * Gets the session id currently in use
-     * 
+     *
      * @return string
      */
     public function getSessionId(){
@@ -848,7 +855,7 @@ class ResponsysWSService extends \SoapClient
 
     protected function __authenticatedSoapCall ($functionName, array $arguments, array $options = null, $inputHeaders = null, array &$outputHeaders = null){
         if (!$this->authenticated){
-            $this->login(new Calls\Login($this->username, $this->password));
+            $this->authenticate();
         }
 
         return $this->__soapCall($functionName, $arguments, $options, $inputHeaders, $outputHeaders);
