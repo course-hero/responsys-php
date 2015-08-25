@@ -12,6 +12,8 @@ use CourseHero\ResponsysPHP\Api\Types as Types;
  */
 class ResponsysWSService extends \SoapClient
 {
+    const REMOTE_WSDL = 'https://ws2.responsys.net/webservices/wsdl/ResponsysWS_Level1.wsdl';
+
     protected $authenticated;
     protected $username;
     protected $password;
@@ -240,8 +242,10 @@ class ResponsysWSService extends \SoapClient
      * @param string $wsdl The wsdl file to use
      * @access public
      */
-    public function __construct($username, $password, array $options = array(), $wsdl = 'https://ws2.responsys.net/webservices/wsdl/ResponsysWS_Level1.wsdl')
+    public function __construct($username, $password, array $options = array(), $wsdl = null)
     {
+        $wsdl = $wsdl ?: dirname(__FILE__) . DIRECTORY_SEPARATOR . 'ResponsysWS_Level1.wsdl';
+
         foreach (self::$classmap as $key => $value) {
             if (!isset($options['classmap'][$key])) {
                 $options['classmap'][$key] = $value;
