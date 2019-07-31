@@ -1628,7 +1628,7 @@
     <service name="ResponsysWSService">
         <documentation>Responsys Web Services API</documentation>
         <port binding="tns:ResponsysWSSoapBinding" name="ResponsysWS">
-            <soap:address location="https://ws2.responsys.net/webservices/services/ResponsysWSService"/>
+            <soap:address location="https://ws2t.responsys.net/webservices/services/ResponsysWSService"/>
         </port>
     </service>
 </definitions>
