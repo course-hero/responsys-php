@@ -12,7 +12,7 @@ use CourseHero\ResponsysPHP\Api\Types as Types;
  */
 class ResponsysWSService extends \SoapClient
 {
-    const REMOTE_WSDL = 'https://ws2.responsys.net/webservices/wsdl/ResponsysWS_Level1.wsdl';
+    const REMOTE_WSDL = 'https://ws2t.responsys.net/webservices/wsdl/ResponsysWS_Level1.wsdl';
 
     protected $authenticated;
     protected $username;
